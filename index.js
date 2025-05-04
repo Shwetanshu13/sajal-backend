@@ -26,7 +26,17 @@ app.use(
 );
 
 mongoose.set("strictQuery", false);
-mongoose.connect(keys.MONGO_URI)
+mongoose.connect(keys.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log("MongoDB connected");
+  app.listen(Port, () => {
+    console.log(`server running on ${Port}`);
+  });
+}).catch((err) => {
+  console.error("Failed to connect to MongoDB:", err);
+});
 
 var store = new MongoDBStore(
   {
@@ -78,6 +88,6 @@ require("./servises/passport");
 app.use("/", uploadRoutes);
 app.use("/", postRoutes);
 
-app.listen(Port, () => {
-  console.log(`server running ${Port}`);
-});
+// app.listen(Port, () => {
+//   console.log(`server running ${Port}`);
+// });
