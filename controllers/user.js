@@ -68,8 +68,8 @@ exports.register = async (req, res) => {
       email: temail,
       password: hashed_password,
       verify: true,
-      likeslist:{},
-      bookmarkslist:{},
+      likeslist: {},
+      bookmarkslist: {},
     }).save();
     const token = generateToken({ id: user._id.toString() }, "15d");
     res.send({
@@ -78,8 +78,8 @@ exports.register = async (req, res) => {
       picture: user.picture,
       token: token,
       message: "Register Success !",
-      likes:[],
-      bookmarks:[],
+      likes: [],
+      bookmarks: [],
     });
   } catch (error) {
     // console.log(error);
@@ -109,9 +109,9 @@ exports.deletebookmark = async (req, res) => {
         }
       }
       user.bookmarks = m;
-      if(user.bookmarkslist){
-        if(user.bookmarkslist.has(`${postid}`)){
-        user.bookmarkslist.delete(`${postid}`);
+      if (user.bookmarkslist) {
+        if (user.bookmarkslist.has(`${postid}`)) {
+          user.bookmarkslist.delete(`${postid}`);
         }
       }
       user.save();
@@ -149,9 +149,9 @@ exports.deletelikes = async (req, res) => {
         }
       }
       user.likes = m;
-      if(user.likeslist){
-        if(user.likeslist.has(`${postid}`)){
-        user.likeslist.delete(`${postid}`);
+      if (user.likeslist) {
+        if (user.likeslist.has(`${postid}`)) {
+          user.likeslist.delete(`${postid}`);
         }
       }
       user.save();
@@ -181,8 +181,8 @@ exports.checklikes = async (req, res) => {
       return res.status(202).json({ msg: "Does not exist" });
     }
     else {
-      if(user.likeslist){
-        if(user.likeslist.has(`${postid}`)){
+      if (user.likeslist) {
+        if (user.likeslist.has(`${postid}`)) {
           return res.status(202).json({ msg: "ok" });
         }
       }
@@ -239,12 +239,12 @@ exports.checkbookmark = async (req, res) => {
       return res.status(202).json({ msg: "Does not exist" });
     }
     else {
-      if(user.bookmarkslist){
-        if(user.bookmarkslist.has(`${postid}`)){
+      if (user.bookmarkslist) {
+        if (user.bookmarkslist.has(`${postid}`)) {
           return res.status(202).json({ msg: "ok" });
         }
       }
-      for (var i = 0; i < m.length; i++) { 
+      for (var i = 0; i < m.length; i++) {
         if (m[i] == postid) {
           return res.status(202).json({ msg: "ok" });
         }
@@ -300,7 +300,7 @@ exports.bookmark = async (req, res) => {
       }
       user.bookmarks = m;
     }
-    user.bookmarkslist.set(`${postid}`,true);
+    user.bookmarkslist.set(`${postid}`, true);
     user.save();
     if (f == 1) {
       return res.status(202).json({ msg: "exists" });
@@ -339,7 +339,7 @@ exports.likes = async (req, res) => {
       }
     }
     mt.likes = m;
-    mt.likeslist.set(`${postid}`,true);
+    mt.likeslist.set(`${postid}`, true);
     mt.save();
     if (f == 1) {
       return res.status(202).json({ msg: "exists" });
@@ -356,7 +356,7 @@ exports.showbookmark = async (req, res) => {
   try {
     const { id } = req.body;
     const data = await User.findById(id).select("bookmarks bookmarkslist");
-    if(data.length==0){
+    if (data.length == 0) {
       return res.status(200).json({ msg: [] });
     }
     var arr = data.bookmarks;
@@ -413,7 +413,7 @@ exports.showLikemark = async (req, res) => {
   try {
     const { id } = req.body;
     const data = await User.findById(id).select("likes");
-    if(data.length==0){
+    if (data.length == 0) {
       return res.status(200).json({ msg: [] });
     }
     var arr = data.likes;
@@ -481,7 +481,7 @@ exports.showmyposts = async (req, res) => {
     var userid = "";
     var _id = "";
     var view = "";
-    var likes="";
+    var likes = "";
     // console.log(99,arr.length);
     for (var i = 0; i < arr.length; i++) {
       var pd = await Post.findById(arr[i]);
@@ -500,7 +500,7 @@ exports.showmyposts = async (req, res) => {
       imgp = ud.picture;
       name = ud.name;
       _id = arr[i];
-      var likes= pd.likes?pd.likes:0;
+      var likes = pd.likes ? pd.likes : 0;
       const utcTimeString = pd.createdAt;
       const date = new Date(utcTimeString);
       respon.push({
@@ -518,7 +518,7 @@ exports.showmyposts = async (req, res) => {
         createdAt: date,
         powner: true,
         book: false,
-        likes:likes,
+        likes: likes,
       })
     }
     data.save();
