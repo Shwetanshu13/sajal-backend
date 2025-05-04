@@ -26,17 +26,18 @@ app.use(
 );
 
 mongoose.set("strictQuery", false);
-mongoose.connect(keys.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
-  console.log("MongoDB connected");
-  app.listen(Port, () => {
-    console.log(`server running on ${Port}`);
+mongoose.connect(keys.MONGO_URI)
+  .then(() => {
+    console.log("MongoDB connected");
+
+    app.listen(Port, () => {
+      console.log(`Server running on port ${Port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB:", err);
   });
-}).catch((err) => {
-  console.error("Failed to connect to MongoDB:", err);
-});
+
 
 var store = new MongoDBStore(
   {
@@ -66,6 +67,7 @@ app.use(session({
   secret: keys.COOKIE_KEY,
   resave: false,
   saveUninitialized: true,
+  store: store,
   cookie: {
     maxAge: 15 * 24 * 60 * 60 * 1000, // Uncomment if needed for cookie lifespan
     sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax", // "none" for cross-site cookies in production
